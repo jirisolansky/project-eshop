@@ -1,0 +1,45 @@
+.products ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* mezera mezi produkty */
+    justify-content: flex-start; /* Rozložení tří produktů vedle sebe */
+}
+
+.products a {
+    width: fit-content;
+}
+
+.products li {
+    width: calc(31% - 20px); /* Třetina šířky pro tři produkty vedle sebe */
+    height: 400px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    color: #000; /* Barva textu */
+    text-decoration: none; /* Odkazy bez podtržení */
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.products img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px; /* Mezera pod obrázkem */
+}
+
+
+@media (max-width: 992px) {
+    .products li {
+        width: calc(50% - 20px); /* Polovina šířky pro dva produkty vedle sebe na menších obrazovkách */
+    }
+}
+
+@media (max-width: 576px) {
+    .products li {
+        width: 100%; /* Celá šířka pro jeden produkt na mobilních zařízeních */
+    }
+}
