@@ -30,7 +30,7 @@
 <body>
 
     <header>
-        <?php require "assets/header.php"; ?>
+        <?php require "../assets/header.php"; ?>
     </header>
 
     <main>
@@ -43,7 +43,7 @@
                 <ul>
                     <?php foreach($products as $one_product): ?>
                         <li>
-                            <a href="one-product.php?id=<?= $one_product['id'] ?>">
+                            <a href="../one-product.php?id=<?= $one_product['id'] ?>">
                                 <img src="<?php echo $one_product["image"]; ?>" alt="<?php echo $one_product["name"]; ?>">
                                 <h2><?php echo $one_product["name"]; ?></h2>
                                 <p>Cena: <?php echo $one_product["price"]; ?> Kč</p>
@@ -57,7 +57,7 @@
     </main>
 
     <footer>
-        <?php require "assets/footer.php"; ?>
+        <?php require "../assets/footer.php"; ?>
     </footer>
 </body>
 

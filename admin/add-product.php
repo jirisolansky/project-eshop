@@ -44,7 +44,7 @@
 </head>
 <body>
     <header>
-        <?php require "assets/header.php"; ?>
+        <?php require "../assets/header.php"; ?>
     </header>
     
     <main>
@@ -62,7 +62,7 @@
     </main>
 
     <footer>
-        <?php require "assets/footer.php"; ?>
+        <?php require "../assets/footer.php"; ?>
     </footer>
 </body>
 </html>

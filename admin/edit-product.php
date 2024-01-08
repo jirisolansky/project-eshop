@@ -1,6 +1,6 @@
 <?php
 
-    require "assets/database.php";
+    require "../assets/database.php";
 
     if (isset($_GET['id'])) {
         $productId = $_GET['id'];
@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <?php require "assets/header.php"; ?>
+        <?php require "../assets/header.php"; ?>
     </header>
     
     <main>
@@ -90,7 +90,7 @@
     </main>
 
     <footer>
-        <?php require "assets/footer.php"; ?>
+        <?php require "../assets/footer.php"; ?>
     </footer>
 </body>
 </html>
