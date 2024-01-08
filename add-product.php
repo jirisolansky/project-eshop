@@ -1,13 +1,5 @@
 <?php
 
-    session_start();
-
-    if (isset($_SESSION['deleted_product']) && $_SESSION['deleted_product'] === true) {
-        echo "Produkt byl smazán";
-        unset($_SESSION['deleted_product']); // Odstranění session proměnné po zobrazení zprávy
-    }
-
-
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['image'])) {
         $uploadDir = 'uploads/'; // Adresář pro uložení nahraných obrázků
 
