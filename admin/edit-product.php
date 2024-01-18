@@ -1,60 +1,49 @@
 <?php
 
     require "../assets/database.php";
+    require "../assets/product.php";
+
+    $connection = connectionDB();
 
     if (isset($_GET['id'])) {
-        $productId = $_GET['id'];
-        $sql = "SELECT * FROM products WHERE id = $productId";
-        $result = mysqli_query($connection, $sql);
+        $one_product = getProduct($connection, $_GET['id']);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $product = mysqli_fetch_assoc($result);
+        if ($one_product) {
+            $name = $one_product["name"];
+            $price = $one_product["price"];
+            $product_detail = $one_product["product_detail"];
+            $image = $one_product["image"];
+            $id = $one_product["id"];
         } else {
-            echo "Produkt nebyl nalezen.";
-            exit;
+            die("Product nenalezen.");
         }
     } else {
-        echo "Chybí identifikátor produktu.";
-        exit;
+        die("ID produktu nebylo zadáno. Produkt nenalezen.");
     }
 
-    // Pokud se provede úprava produktu
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        // Získání nových informací o produktu z formuláře
-        $name = $_POST['name'];
-        $price = $_POST['price'];
-        $product_detail = $_POST['product_detail'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $name = $_POST["name"];
+        $price = $_POST["price"];
+        $product_detail = $_POST["product_detail"];
+        
+        // Podmínka, která kontroluje, zda byl soubor nahrán bez chyby.
+        // UPLOAD_ERR_OK je konstanta, která znamená, že nenastala žádná chyba při nahrávání.
+        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = '../uploads/';
+            $fileName = $_FILES['image']['name']; // Získává jméno nahrávaného souboru z asociativního pole $_FILES.
+            $filePath = $uploadDir . $fileName; // Spojuje cestu k adresáři s názvem souboru a vytváří úplnou cestu, kde bude soubor uložen.
 
-        // Zde by měla být provedena aktualizace databáze
-        // Aktualizace dat v databázi může vypadat takto:
-        $sql = "UPDATE products SET name = '$name', price = '$price', product_detail = '$product_detail' WHERE id = $productId";
-
-        // Spuštění dotazu na databázi
-        if (mysqli_query($connection, $sql)) {
-            echo "Změny byly uloženy.";
-        } else {
-            echo "Chyba při ukládání změn: " . mysqli_error($connection);
+            // Funkce move_uploaded_file přesune nahrávaný soubor z dočasného umístění ('tmp_name') na konečnou cestu ($filePath).
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+                // Nastavuje proměnnou $image na novou cestu k obrázku.
+                $image = $filePath;
+            } else {
+                echo "Obrázek se nepodařilo nahrát.";
+            }
         }
+
+        updateProduct($connection, $name, $price, $product_detail, $image, $id);
     }
-
-    // Pokud se provede smazání produktu
-    if (isset($_POST['delete'])) {
-        $deleteSql = "DELETE FROM products WHERE id = $productId";
-    
-        if (mysqli_query($connection, $deleteSql)) {
-            // Nastavení session proměnné s informací o smazání produktu
-            session_start();
-            $_SESSION['deleted_product'] = true;
-    
-            // Přesměrování na stránku all-products.php po úspěšném smazání produktu
-            header("Location: all-products.php");
-            exit; // Ukončení skriptu, aby nedošlo k dalšímu zpracování
-        } else {
-            echo "Chyba při mazání produktu: " . mysqli_error($connection);
-        }
-    }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +51,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Editovat produkt</title>
 </head>
 <body>
     <header>
@@ -70,22 +59,9 @@
     </header>
     
     <main>
-    <section class="edit-form">
+        <section class="edit-form">
             <h1>Editace produktu</h1>
-
-            <!-- Formulář pro editaci produktu -->
-            <form action="edit-product.php?id=<?php echo $productId; ?>" method="POST">
-                <input type="text" name="name" value="<?php echo $product['name']; ?>" required><br><br>
-                <input type="text" name="price" value="<?php echo $product['price']; ?>" required><br><br>
-                <textarea name="product_detail"><?php echo $product['product_detail']; ?></textarea><br><br><br>
-                <input type="submit" value="Uložit změny">
-            </form>
-
-            <!-- Tlačítko pro smazání produktu s potvrzením -->
-            <form action="" method="POST">
-                <input type="hidden" name="delete" value="true">
-                <input type="submit" value="Smazat produkt" onclick="return confirm('Opravdu chcete smazat tento produkt?')">
-            </form>
+            <?php require "../assets/form-product.php"; ?>
         </section>
     </main>
 
